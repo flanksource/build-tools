@@ -23,6 +23,7 @@ RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/
   bzip2 -d linux-amd64-github-release.bz2 && \
   mv linux-amd64-github-release /usr/local/bin
 RUN npm install -g netlify-cli now gh
-RUN install_certs google.com:443
 RUN go get github.com/mjibson/esc
 RUN mv /root/go/bin/esc /usr/bin/
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
