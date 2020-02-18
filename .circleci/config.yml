@@ -8,7 +8,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
-          set -x
+          set +e
           if [[ "$CIRCLE_PR_NUMBER" != "" ]]; then
             echo Skipping release of a PR build
             circleci-agent step halt
