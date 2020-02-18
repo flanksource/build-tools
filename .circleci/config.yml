@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  image:
+    docker:
+      - image: circleci/golang:1.12
+    working_directory: /go/src/github.com/moshloop/platform-operator
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          if [[ "$CIRCLE_PR_NUMBER" != "" ]]; then
+            echo Skipping release of a PR build
+            circleci-agent step halt
+            exit 0
+          fi
+          TAG=$(git describe --tags --abbrev=0 --exact-match)
+          docker build . -t flanksource/build-tools
+          docker login --username $DOCKER_LOGIN --password $DOCKER_PASS
+          docker push  flanksource/build-tools
+
+          if [[ "$TAG" !== "" ]];  then
+            docker tag flanksource/build-tools flanksource/build-tools:$TAG
+            docker push flanksource/build-tools:$TAG
+          fi
+workflows:
+  version: 2
+  build:
+    jobs:
+      - image:
+          context: Github
