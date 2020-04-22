@@ -26,7 +26,7 @@ RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8b
 RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1
 RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/linux-amd64-github-release.bz2 &&  \
   bzip2 -d linux-amd64-github-release.bz2 && \
-  chmod +x linux-amd64-github-release
+  chmod +x linux-amd64-github-release && \
   mv linux-amd64-github-release /usr/local/bin/github-release
 RUN npm install -g netlify-cli now gh
 RUN go get github.com/mjibson/esc
