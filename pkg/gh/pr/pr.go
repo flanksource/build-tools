@@ -34,10 +34,12 @@ func (p *PR) Post(msg string ) error {
 }
 
 func (p *PR) PostJUnitResults(junitFiles []string ) error {
-	msg, err := junit.GenerateMarkdownReport(junitFiles)
+	msg, err := junit.GenerateMarkdownReport(junitFiles, false)
 	if err != nil {
 		return fmt.Errorf("Failed to generate JUnit Markdown report with error %v", err)
 	}
-	p.Post(msg)
+	if err := p.Post(msg); err != nil {
+		return err
+	}
 	return nil
 }
