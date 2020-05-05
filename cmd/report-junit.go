@@ -24,17 +24,29 @@ func GetReportJUnitCommand() *cobra.Command {
 		Long: ``,
 		Args:  validateReportJunitArguments,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			_PR, _Files, err := parseReportJunitFlagsAndArguments(cmd)
+			_pr, files, err := parseReportJunitFlagsAndArguments(cmd)
 			if err != nil {
 				return err
 			}
-			_ = fmt.Sprintf("%v,%v", _PR, _Files)
+			_ = fmt.Sprintf("%v,%v", _pr, files)
+
+			if err:= _pr.PostJUnitResults(files); err != nil {
+				return err
+			}
 			return nil
 		},
 
 	}
 	initReportJUnitCommand(cmd)
 	return cmd
+}
+
+// initReportJUnitCommand defines the flags, persistent flags and configuration settings
+// for the report-junit command and adds all sub commands.
+func initReportJUnitCommand(cmd *cobra.Command) {
+
+	cmd.Flags().StringP(AuthTokenName, "t", "", "The Github API key to be used to access Github.")
+
 }
 
 func validateReportJunitArguments(cmd *cobra.Command, args []string) error {
@@ -48,6 +60,10 @@ func validateReportJunitArguments(cmd *cobra.Command, args []string) error {
 
 	if _,err := strconv.Atoi(args[1]); err != nil {
 		return errors.New("valid PR number required.")
+	}
+
+	if token, err :=cmd.Flags().GetString(AuthTokenName); err!= nil || token == "" {
+		return errors.New("a github API Token is required.")
 	}
 	return nil
 }
@@ -78,10 +94,4 @@ func parseReportJunitFlagsAndArguments(cmd *cobra.Command)  (_pr pr.PR, junitFil
 
 
 
-// initReportJUnitCommand defines the flags, persistent flags and configuration settings
-// for the report-junit command and adds all sub commands.
-func initReportJUnitCommand(cmd *cobra.Command) {
 
-	cmd.Flags().StringP(AuthTokenName, "t", "", "The Github API key to be used to access Github.")
-
-}
