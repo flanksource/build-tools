@@ -29,7 +29,7 @@ func initGhCommand(cmd *cobra.Command) {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	//cmd.PFlags().BoolP("toggle", "t", false, "Help message for toggle")
-	//cmd.AddCommand(GetForceErrorCommand(XX)
+
+	cmd.AddCommand(GetReportJUnitCommand())
 
 }
