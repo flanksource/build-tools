@@ -14,9 +14,8 @@ func GetRootCommand() *cobra.Command {
 
 	var rootCmd = &cobra.Command{
 		Use:   "build-tools",
-		Short: "A swiss-army knife of CI/CI related commands",
+		Short: "build-tools : A swiss-army knife of CI/CI related commands",
 		Long: ``,
-		//RunE: func(cmd *cobra.Command, args []string) error { return fmt.Errorf("test")},
 	}
 	initRootCommand(rootCmd)
 	return rootCmd

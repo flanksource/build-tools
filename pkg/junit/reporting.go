@@ -2,7 +2,7 @@ package junit
 
 import (
 	"fmt"
-	"github.com/flanksource/commons/files"
+	log "github.com/flanksource/commons/logger"
 	"github.com/joshdk/go-junit"
 )
 
@@ -10,17 +10,22 @@ const mdTableHeader = `| Class| Message | Result |
 |------|---------|--------|
 `
 
-func GenerateMarkdownReport(junitFiles []string, silentSuccess bool) (string, error) {
+const SuccessMessage = ":thumbsup: All good - no test failures."
+
+func GenerateMarkdownReport(reports []string, silentSuccess bool) (string, error) {
 	var hasFailures = false
+	var hadError error = nil
 	result := ""
-	for _, file := range junitFiles {
-		rpt := files.SafeRead(file)
+	for _, rpt := range reports {
 		if rpt == "" {
 			//log warning, but continue
+			log.Warnf("Empty report.")
 		} else {
-			failures, md, err := GenerateMarkdown(rpt,silentSuccess)
+			failures, md, err := GenerateMarkdown(rpt, silentSuccess)
 			if err != nil {
 				//log error, but continue
+				log.Errorf("Error generating report: %v", err)
+				hadError = err
 			}
 			if failures {
 				hasFailures = true
@@ -30,13 +35,13 @@ func GenerateMarkdownReport(junitFiles []string, silentSuccess bool) (string, er
 	}
 	if !hasFailures {
 		if !silentSuccess {
-			return ":thumbsup: All good - no test failures.", nil
+			return SuccessMessage, hadError
 
 		} else {
-			return "", nil
+			return "", hadError
 		}
 	}
-	return result, nil
+	return result, hadError
 }
 
 func GenerateMarkdown(reportXml string, silentSuccess bool) (hasFailures bool, md string, err error) {
@@ -62,16 +67,17 @@ func GenerateMarkdown(reportXml string, silentSuccess bool) (hasFailures bool, m
 			case junit.StatusSkipped:
 				mdTable += fmt.Sprintf("| **%s** | `%s` | :white_circle: |\n", test.Classname, test.Name)
 			case junit.StatusPassed:
+				// we ignore successes - we comment only on failed and skipped results to cut down report size
 				break
-				default:
-				return hasFailures, "", fmt.Errorf("Not implemented")
+			// no default:
+			// any other status will be ignored
 			}
 		}
 	}
 
 	if !hasFailures {
 		if !silentSuccess {
-			return hasFailures,":thumbsup: All good - no test failures.", nil
+			return hasFailures, ":thumbsup: All good - no test failures.", nil
 
 		} else {
 			return hasFailures, "", nil
@@ -79,6 +85,5 @@ func GenerateMarkdown(reportXml string, silentSuccess bool) (hasFailures bool, m
 	}
 
 	return hasFailures, mdTable, nil
-
 
 }

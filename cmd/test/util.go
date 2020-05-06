@@ -57,3 +57,21 @@ func ParsesStringFlag(t *testing.T, cmd *cobra.Command, flag string, wantValue s
 
 	return true
 }
+
+// ParsesBoolFlag is an assertion helper that verifies that the given cobra.Command cmd
+// parses a given bool flag
+func ParsesBoolFlag(t *testing.T, cmd *cobra.Command, flag string, wantValue bool, args []string, msgAndArgs ...interface{} ) bool {
+	err:= cmd.ParseFlags(args)
+	if err != nil{
+		return assert.Fail(t, fmt.Sprintf("Error '%v'",err), msgAndArgs...)
+	}
+	gotValue, err := cmd.Flags().GetBool(flag)
+	if err != nil{
+		return assert.Fail(t, fmt.Sprintf("Error '%v'",err), msgAndArgs...)
+	}
+	if wantValue != gotValue {
+		return assert.Fail(t, fmt.Sprintf("Wanted string flag '%v' to parse to '%v', but got '%v'",flag, wantValue, gotValue), msgAndArgs...)
+	}
+
+	return true
+}
