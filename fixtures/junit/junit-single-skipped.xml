@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite tests="1" failures="0" time="" name="test">
+		<testcase classname="test.thanos" name="Must specify a thanos server under e2e.server in client mode" time="">
+			<skipped message="Must specify a thanos server under e2e.server in client mode"></skipped>
+		</testcase>
+	</testsuite>
+</testsuites>
