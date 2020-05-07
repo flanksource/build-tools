@@ -48,6 +48,7 @@ github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad/go.mod h1:mPKfmRa823
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fatih/color v1.9.0/go.mod h1:eQcE1qtQxscV5RaZvpXrrb8Drkc3/DdQ+uUYCNjL+zU=
 github.com/fatih/structs v1.1.0/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga6PJ7M=
+github.com/philipstaffordwood/build-tools v0.0.0-20200422080352-edf8e82eabd9 h1:80PIRbEoCMLysf5BlXEq1L9RrcxeOZo3QMecFFcJo0Y=
 github.com/flanksource/commons v1.2.0 h1:hd5UZhf8lE84HwgxE+ch/xupiu9YLxsFTO/a8p6cToU=
 github.com/flanksource/commons v1.2.0/go.mod h1:6P0TYmsqu3QVDBjrIoib4pmBBdt2M/Z934grc8B7i4U=
 github.com/flanksource/yaml v0.0.0-20200322131016-b7b2608b8702/go.mod h1:9oTOzfyVuHLV9JRt2ZbzdrX2GpYKQk/+mPPXZIYSH6o=
@@ -194,6 +195,7 @@ github.com/onsi/gomega v1.9.0/go.mod h1:Ho0h+IUsWyvy1OpqCwxlQ/21gkhVunqlU8fDGcoT
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
+github.com/philipstaffordwood/build-tools v0.0.0-20200422080352-edf8e82eabd9 h1:8Y9y0p3IN4TpAScubDxvtiw7W/U2disoceiipBbmg64=
 github.com/pierrec/lz4 v2.0.5+incompatible/go.mod h1:pdkljMzZIN41W+lC3N2tnIh5sFi+IEE17M5jbnwPHcY=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

@@ -24,12 +24,5 @@ func GetRootCommand() *cobra.Command {
 // initRootCommand defines the flags, persistent flags and configuration settings
 // for the root command and adds all sub commands.
 func initRootCommand(cmd *cobra.Command) {
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.build-tools.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	//cmd.PFlags().BoolP("toggle", "t", false, "Help message for toggle")
 	cmd.AddCommand(GetGhCommand())
-
 }

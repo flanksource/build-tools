@@ -15,7 +15,6 @@ func GetGhCommand() *cobra.Command {
 		Use:   "gh",
 		Short: "github related actions",
 		Long: ``,
-		//RunE: func(cmd *cobra.Command, args []string) error { return fmt.Errorf("test")},
 	}
 	initGhCommand(cmd)
 	return cmd
@@ -24,12 +23,5 @@ func GetGhCommand() *cobra.Command {
 // initGhCommand defines the flags, persistent flags and configuration settings
 // for the gh command and adds all sub commands.
 func initGhCommand(cmd *cobra.Command) {
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.build-tools.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-
 	cmd.AddCommand(GetReportJUnitCommand())
-
 }

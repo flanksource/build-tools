@@ -2,7 +2,7 @@ package junit
 
 import (
 	"fmt"
-	"github.com/flanksource/build-tools/util"
+	"github.com/philipstaffordwood/build-tools/util"
 	"github.com/flanksource/commons/files"
 	log "github.com/sirupsen/logrus"
 	loghooks "github.com/sirupsen/logrus/hooks/test"

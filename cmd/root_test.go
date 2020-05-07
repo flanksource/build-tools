@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/flanksource/build-tools/cmd/test"
+	"github.com/philipstaffordwood/build-tools/cmd/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

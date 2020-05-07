@@ -6,7 +6,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/flanksource/build-tools/cmd"
+	"github.com/philipstaffordwood/build-tools/cmd"
 	"os"
 )
 

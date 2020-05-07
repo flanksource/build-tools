@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/flanksource/build-tools/cmd/test"
-	"github.com/flanksource/build-tools/pkg/gh/pr"
+	"github.com/philipstaffordwood/build-tools/cmd/test"
+	"github.com/philipstaffordwood/build-tools/pkg/gh/pr"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

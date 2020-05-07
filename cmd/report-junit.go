@@ -6,9 +6,9 @@ package cmd
 
 import (
 	"errors"
-	"github.com/flanksource/build-tools/pkg/gh/pr"
-	"github.com/flanksource/build-tools/pkg/junit"
-	"github.com/flanksource/build-tools/util"
+	"github.com/philipstaffordwood/build-tools/pkg/gh/pr"
+	"github.com/philipstaffordwood/build-tools/pkg/junit"
+	"github.com/philipstaffordwood/build-tools/util"
 	"github.com/spf13/cobra"
 	"strconv"
 	"strings"
@@ -26,7 +26,6 @@ func GetReportJUnitCommand() *cobra.Command {
 		Long: ``,
 		Args:  validateReportJunitArguments,
 		RunE:  runReportJUnitCmd,
-
 	}
 	initReportJUnitCommand(cmd)
 	return cmd
@@ -35,14 +34,13 @@ func GetReportJUnitCommand() *cobra.Command {
 // initReportJUnitCommand defines the flags, persistent flags and configuration settings
 // for the report-junit command and adds all sub commands.
 func initReportJUnitCommand(cmd *cobra.Command) {
-
 	cmd.Flags().StringP(AuthTokenFlag, "t", "", "The Github API key to be used to access Github.")
 	cmd.Flags().Bool(SilentSuccessFlag,  false, "If set to 'true' posts no PR comment when JUnit test contains no failures or skips.")
 }
 
 func validateReportJunitArguments(cmd *cobra.Command, args []string) error {
 	if len(args) < 3 {
-		return errors.New("four arguments needed.")
+		return errors.New("three arguments needed.")
 	}
 
 	if len(strings.Split(args[0],"/")) < 2 {
@@ -60,24 +58,7 @@ func validateReportJunitArguments(cmd *cobra.Command, args []string) error {
 }
 
 
-func runReportJUnitCmd (cmd *cobra.Command, args []string) error {
-	_pr, files, silentSuccess, err := parseReportJunitFlagsAndArguments(cmd)
-	if err != nil {
-		return err
-	}
-	rpts, err := util.GetFileString(files)
-	md, err := junit.GenerateMarkdownReport(rpts, silentSuccess)
-	if err != nil {
-		return err
-	}
-	if md != "" {
-		err := _pr.Post(md)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
+
 
 func parseReportJunitFlagsAndArguments(cmd *cobra.Command)  (_pr pr.PR, junitFiles []string, silentSuccess bool, err error ) {
 	args := cmd.Flags().Args()
@@ -106,6 +87,25 @@ owner/repo pr-number junit-file`)
 	}
 
 	return _pr, args, silentSuccess, nil
+}
+
+func runReportJUnitCmd (cmd *cobra.Command, args []string) error {
+	_pr, files, silentSuccess, err := parseReportJunitFlagsAndArguments(cmd)
+	if err != nil {
+		return err
+	}
+	rpts, err := util.GetFileString(files)
+	md, err := junit.GenerateMarkdownReport(rpts, silentSuccess)
+	if err != nil {
+		return err
+	}
+	if md != "" {
+		err := _pr.Post(md)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 

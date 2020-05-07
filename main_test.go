@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/flanksource/build-tools/cmd"
+	"github.com/philipstaffordwood/build-tools/cmd"
 	"github.com/stretchr/testify/assert"
 	"os/exec"
 	"strings"
