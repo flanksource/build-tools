@@ -16,6 +16,8 @@ import (
 
 const AuthTokenFlag = "auth-token"
 const SilentSuccessFlag = "silent-success"
+const SuccessMessageFlag = "success-message"
+const FailureMessageFlag = "failure-message"
 
 // GetReportJUnitCommand returns the report-junit command, adds all child commands and sets flags appropriately.
 func GetReportJUnitCommand() *cobra.Command {
@@ -36,6 +38,8 @@ func GetReportJUnitCommand() *cobra.Command {
 func initReportJUnitCommand(cmd *cobra.Command) {
 	cmd.Flags().StringP(AuthTokenFlag, "t", "", "The Github API key to be used to access Github.")
 	cmd.Flags().Bool(SilentSuccessFlag,  false, "If set to 'true' posts no PR comment when JUnit test contains no failures or skips.")
+	cmd.Flags().String(SuccessMessageFlag,  "", "This message will be added to the top of the PR comment if no failed or skipped tests are found.")
+	cmd.Flags().String(FailureMessageFlag,  "", "This message will be added to the top of the PR comment if failed or skipped tests are found.")
 }
 
 func validateReportJunitArguments(cmd *cobra.Command, args []string) error {
@@ -60,10 +64,10 @@ func validateReportJunitArguments(cmd *cobra.Command, args []string) error {
 
 
 
-func parseReportJunitFlagsAndArguments(cmd *cobra.Command)  (_pr pr.PR, junitFiles []string, silentSuccess bool, err error ) {
+func parseReportJunitFlagsAndArguments(cmd *cobra.Command)  (_pr pr.PR, junitFiles []string, silentSuccess bool, successMessage string, failureMessage string, err error ) {
 	args := cmd.Flags().Args()
 	if len(args)<3 {
-		return pr.PR{}, []string{}, false, errors.New(`Not enough arguments: 
+		return pr.PR{}, []string{}, false, "","",errors.New(`Not enough arguments: 
 At least give:
 owner/repo pr-number junit-file`)
 	}
@@ -77,7 +81,8 @@ owner/repo pr-number junit-file`)
 
 	token,_ := cmd.Flags().GetString(AuthTokenFlag)
 	silentSuccess,_ = cmd.Flags().GetBool(SilentSuccessFlag)
-
+	successMessage,_ = cmd.Flags().GetString(SuccessMessageFlag)
+	failureMessage,_ = cmd.Flags().GetString(FailureMessageFlag)
 
 	_pr = pr.PR{
 		APIToken: token,
@@ -86,18 +91,24 @@ owner/repo pr-number junit-file`)
 		Num: prNumarg,
 	}
 
-	return _pr, args, silentSuccess, nil
+	return _pr, args, silentSuccess, successMessage,failureMessage,nil
 }
 
 func runReportJUnitCmd (cmd *cobra.Command, args []string) error {
-	_pr, files, silentSuccess, err := parseReportJunitFlagsAndArguments(cmd)
+	_pr, files, silentSuccess, successMessage, failureMessage,err := parseReportJunitFlagsAndArguments(cmd)
 	if err != nil {
 		return err
 	}
 	rpts, err := util.GetFileString(files)
-	md, err := junit.GenerateMarkdownReport(rpts, silentSuccess)
+	md, hadFailures, err := junit.GenerateMarkdownReport(rpts, silentSuccess)
 	if err != nil {
 		return err
+	}
+	if successMessage != "" && !hadFailures {
+		md = successMessage + "\n"+  md
+	}
+	if failureMessage != "" && hadFailures {
+		md = failureMessage + "\n"+ md
 	}
 	if md != "" {
 		err := _pr.Post(md)

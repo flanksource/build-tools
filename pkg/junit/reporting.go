@@ -12,7 +12,7 @@ const mdTableHeader = `| Class| Message | Result |
 
 const SuccessMessage = ":thumbsup: All good - no test failures."
 
-func GenerateMarkdownReport(reports []string, silentSuccess bool) (string, error) {
+func GenerateMarkdownReport(reports []string, silentSuccess bool) (string, bool, error) {
 	var hasFailures = false
 	var hadError error = nil
 	result := ""
@@ -35,13 +35,13 @@ func GenerateMarkdownReport(reports []string, silentSuccess bool) (string, error
 	}
 	if !hasFailures {
 		if !silentSuccess {
-			return SuccessMessage, hadError
+			return SuccessMessage, hasFailures, hadError
 
 		} else {
-			return "", hadError
+			return "", hasFailures, hadError
 		}
 	}
-	return result, hadError
+	return result, hasFailures, hadError
 }
 
 func GenerateMarkdown(reportXml string, silentSuccess bool) (hasFailures bool, md string, err error) {

@@ -103,7 +103,9 @@ func ignoreErrorHelper(contents []string, err error) []string {
 }
 
 func TestGenerateMarkdownReport(t *testing.T) {
-
+	boolAssignHelper := func (_bool bool) *bool {
+		return &_bool
+	}
 	type args struct {
 		reports       []string
 		silentSuccess bool
@@ -112,6 +114,7 @@ func TestGenerateMarkdownReport(t *testing.T) {
 		name    string
 		args    args
 		want    string
+		wantFoundFailures *bool //nil means we don't care about the result
 		wantErr bool
 	}{
 		{
@@ -121,6 +124,7 @@ func TestGenerateMarkdownReport(t *testing.T) {
 				silentSuccess: true,
 			},
 			want: "",
+			wantFoundFailures: boolAssignHelper(false),
 			wantErr: false,
 		},
 		{
@@ -130,6 +134,7 @@ func TestGenerateMarkdownReport(t *testing.T) {
 				silentSuccess: true,
 			},
 			want: "",
+			wantFoundFailures: boolAssignHelper(false),
 			wantErr: false,
 		},
 		{
@@ -139,6 +144,7 @@ func TestGenerateMarkdownReport(t *testing.T) {
 				silentSuccess: false,
 			},
 			want: SuccessMessage,
+			wantFoundFailures: boolAssignHelper(false),
 			wantErr: false,
 		},
 		{
@@ -148,6 +154,7 @@ func TestGenerateMarkdownReport(t *testing.T) {
 				silentSuccess: false,
 			},
 			want: tableHeader+singleLoneFailureMessageRow,
+			wantFoundFailures: boolAssignHelper(true),
 			wantErr: false,
 		},
 		{
@@ -157,18 +164,22 @@ func TestGenerateMarkdownReport(t *testing.T) {
 				silentSuccess: false,
 			},
 			want: tableHeader+singleLoneSkippedMessageRow,
+			wantFoundFailures: boolAssignHelper(true),
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			got, err := GenerateMarkdownReport(tt.args.reports, tt.args.silentSuccess)
+			got, foundFailures, err := GenerateMarkdownReport(tt.args.reports, tt.args.silentSuccess)
 			if tt.wantErr{
 				assert.Error(t,err)
 				return
 			}
 			assert.Equal(t, tt.want, got)
+			if tt.wantFoundFailures != nil {
+				assert.Equal(t, *(tt.wantFoundFailures), foundFailures )
+			}
 
 		})
 	}
@@ -219,7 +230,7 @@ func TestGenerateMarkdownReportLogging(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			loghooks := loghooks.NewGlobal()
-			gotRpt, err := GenerateMarkdownReport(tt.args.reports, tt.args.silentSuccess)
+			gotRpt, _, err := GenerateMarkdownReport(tt.args.reports, tt.args.silentSuccess)
 			if tt.wantErr{
 				assert.Error(t,err)
 				return
@@ -231,6 +242,7 @@ func TestGenerateMarkdownReportLogging(t *testing.T) {
 		})
 	}
 }
+
 
 func ContainsLogEntryWithMessagePrefix(t *testing.T, entries []*log.Entry, wantedMessage string, wantedLevel log.Level) bool {
 	if entries == nil {

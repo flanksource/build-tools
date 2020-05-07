@@ -18,4 +18,4 @@ require (
 
 replace gopkg.in/hairyhenderson/yaml.v2 => github.com/maxaudron/yaml v0.0.0-20190411130442-27c13492fe3c
 
-replace . => github.com/philipstaffordwood/build-tools v0.0.0-20200422080352-edf8e82eabd9
+//replace . => github.com/philipstaffordwood/build-tools v0.0.0-20200422080352-edf8e82eabd9
