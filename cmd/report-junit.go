@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"errors"
+	"os"
 	"github.com/philipstaffordwood/build-tools/pkg/gh/pr"
 	"github.com/philipstaffordwood/build-tools/pkg/junit"
 	"github.com/philipstaffordwood/build-tools/util"
