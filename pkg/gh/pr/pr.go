@@ -1,3 +1,7 @@
+/*
+Copyright © 2020 Flanksource
+This file is part of Flanksource build tools
+*/
 package pr
 
 import (
