@@ -36,7 +36,7 @@ func GetReportJUnitCommand() *cobra.Command {
 // initReportJUnitCommand defines the flags, persistent flags and configuration settings
 // for the report-junit command and adds all sub commands.
 func initReportJUnitCommand(cmd *cobra.Command) {
-	cmd.Flags().StringP(AuthTokenFlag, "t", "", "The Github API key to be used to access Github.")
+	cmd.Flags().StringP(AuthTokenFlag, "t", os.Getenv("GITHUB_TOKEN"), "The Github API key to be used to access Github.")
 	cmd.Flags().Bool(SilentSuccessFlag,  false, "If set to 'true' posts no PR comment when JUnit test contains no failures or skips.")
 	cmd.Flags().String(SuccessMessageFlag,  "", "This message will be added to the top of the PR comment if no failed or skipped tests are found.")
 	cmd.Flags().String(FailureMessageFlag,  "", "This message will be added to the top of the PR comment if failed or skipped tests are found.")
@@ -118,7 +118,6 @@ func runReportJUnitCmd (cmd *cobra.Command, args []string) error {
 	}
 	return nil
 }
-
 
 
 
