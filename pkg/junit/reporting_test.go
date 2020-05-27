@@ -18,16 +18,16 @@ import (
 const successMessage string = ":thumbsup: All good - no test failures."
 
 const tableHeader =
-`| Class| Message | Result |
-|------|---------|--------|
+`| Result | Class | Message |
+|--------|-------|--------|
 `
 
 const singleLoneFailureMessageRow string =
-	"| **test.harbor** | `[harbor] Expected pods but none running - did you deploy?` | :x: |\n"
+	"| :x: | **test.harbor** | `[harbor] Expected pods but none running - did you deploy?` |\n"
 
 
 const singleLoneSkippedMessageRow string =
-"| **test.thanos** | `Must specify a thanos server under e2e.server in client mode` | :white_circle: |\n"
+"| :white_circle: | **test.thanos** | `Must specify a thanos server under e2e.server in client mode` |\n"
 
 func TestGenerateMarkdown(t *testing.T) {
 	tests := []struct {

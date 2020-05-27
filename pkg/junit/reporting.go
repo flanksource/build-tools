@@ -10,8 +10,8 @@ import (
 	"github.com/joshdk/go-junit"
 )
 
-const mdTableHeader = `| Class| Message | Result |
-|------|---------|--------|
+const mdTableHeader = `| Result | Class | Message |
+|--------|-------|--------|
 `
 
 const SuccessMessage = ":thumbsup: All good - no test failures."
@@ -67,9 +67,9 @@ func GenerateMarkdown(reportXml string, silentSuccess bool) (hasFailures bool, m
 			}
 			switch test.Status {
 			case junit.StatusFailed:
-				mdTable += fmt.Sprintf("| **%s** | `%s` | :x: |\n", test.Classname, test.Name)
+				mdTable += fmt.Sprintf("| :x: | **%s** | `%s` |\n", test.Classname, test.Name)
 			case junit.StatusSkipped:
-				mdTable += fmt.Sprintf("| **%s** | `%s` | :white_circle: |\n", test.Classname, test.Name)
+				mdTable += fmt.Sprintf("| :white_circle: | **%s** | `%s` |\n", test.Classname, test.Name)
 			case junit.StatusPassed:
 				// we ignore successes - we comment only on failed and skipped results to cut down report size
 				break
