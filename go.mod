@@ -1,12 +1,14 @@
-//TODO: module github.com/flanksource/build-tools
-module github.com/philipstaffordwood/build-tools
+module github.com/flanksource/build-tools
 
 go 1.13
 
 require (
 	github.com/flanksource/commons v1.2.0
+	github.com/go-errors/errors v1.1.1
 	github.com/google/go-github/v31 v31.0.0
 	github.com/joshdk/go-junit v0.0.0-20200312181801-e5d93c0f31a8
+	github.com/palantir/stacktrace v0.0.0-20161112013806-78658fd2d177
+	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/cobra v1.0.0
 	github.com/stretchr/testify v1.4.0
