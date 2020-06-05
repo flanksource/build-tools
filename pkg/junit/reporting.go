@@ -68,13 +68,18 @@ func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 			return list
 		}
 		for _, test := range suite.Tests {
-			msg := fmt.Sprintf("stdout:%s stderr:%s", test.SystemOut, test.SystemErr)
+			msg := test.Error.Error()
+			if msg == "" {
+				msg = test.Name
+			}
+			title := test.Classname
+			path := test.Name
 			zero := 0
 			annotation := &github.CheckRunAnnotation{
-				Title:     &test.Classname,
+				Title:     &title,
 				StartLine: &zero,
 				EndLine:   &zero,
-				Path:      &test.Name,
+				Path:      &path,
 				Message:   &msg,
 			}
 

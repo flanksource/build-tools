@@ -106,21 +106,20 @@ func (gh *Client) Comment(comment string) error {
 func (run *CheckRun) Annotate(results junit.TestResults) error {
 	title := "Test Results"
 	summary := results.String()
-
-	// _, _, err := run.Checks.CreateCheckRun(run.Context, run.Owner, run.Repo, github.CreateCheckRunOptions{
-	// 	Name:    run.Build + "3",
-	// 	HeadSHA: run.SHA,
-	// 	Output: &github.CheckRunOutput{
-	// 		Title:       &title,
-	// 		Summary:     &summary,
-	// 		Annotations: results.GetGithubAnnotations(),
-	// 	},
-	// })
+	zero := 0
+	list := []*github.CheckRunAnnotation{&github.CheckRunAnnotation{
+		AnnotationLevel: &junit.AnnotationNotice,
+		StartLine:       &zero,
+		EndLine:         &zero,
+		Path:            &run.Build,
+		Message:         &summary,
+	}}
+	list = append(list, results.GetGithubAnnotations()...)
 	_, _, err := run.Checks.UpdateCheckRun(run, run.Owner, run.Repo, *run.ID, github.UpdateCheckRunOptions{
 		Output: &github.CheckRunOutput{
 			Title:       &title,
 			Summary:     &summary,
-			Annotations: results.GetGithubAnnotations(),
+			Annotations: list,
 		},
 	})
 	if err != nil {
