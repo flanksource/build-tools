@@ -46,10 +46,16 @@ func toPtr(s string) *string {
 	return &s
 }
 
+const MAX_ANNOTATIONS = 50
+
 func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 	list := []*github.CheckRunAnnotation{}
-
+	count := 0
 	for _, suite := range results.Suites {
+		count++
+		if count > MAX_ANNOTATIONS {
+			return list
+		}
 		for _, test := range suite.Tests {
 			msg := fmt.Sprintf("stdout:%s stderr:%s", test.SystemOut, test.SystemErr)
 			zero := 0
