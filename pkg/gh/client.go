@@ -55,7 +55,9 @@ type CheckRun struct {
 }
 
 func (gh *Client) GetActionRun() (*CheckRun, error) {
-	gh.Init()
+	if err := gh.Init(); err != nil {
+		return nil, err
+	}
 
 	if gh.RunID > 0 {
 		run, _, err := gh.Checks.GetCheckRun(gh, gh.Owner, gh.Repo, gh.RunID)
