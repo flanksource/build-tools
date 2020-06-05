@@ -2,7 +2,9 @@ package gh
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/flanksource/build-tools/pkg/junit"
 	"github.com/google/go-github/v31/github"
@@ -14,15 +16,16 @@ type Client struct {
 	context.Context
 	*github.Client
 	*github.PullRequestEvent
-	Repo, Owner     string
-	Token           string
-	Workflow, Build string
-	PR              int
-	RunID           int64
-	SHA, Ref        string
+	Repo, Owner          string
+	Token                string
+	EventPath, EventType string
+	Workflow, Build      string
+	PR                   int
+	RunID                int64
+	SHA, Ref             string
 }
 
-func (gh *Client) Init() {
+func (gh *Client) Init() error {
 	gh.Context = context.TODO()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: gh.Token},
@@ -30,6 +33,20 @@ func (gh *Client) Init() {
 	tc := oauth2.NewClient(gh.Context, ts)
 
 	gh.Client = github.NewClient(tc)
+	if gh.EventPath != "" {
+		var data []byte
+		var err error
+		if data, err = ioutil.ReadFile(gh.EventPath); err != nil {
+			return fmt.Errorf("error reading %s: %v", gh.EventPath, err)
+		}
+		if gh.EventType == "pull_request" {
+			gh.PullRequestEvent = &github.PullRequestEvent{}
+			if err := json.Unmarshal(data, gh.PullRequestEvent); err != nil {
+				return fmt.Errorf("error unmarshal %s: %v", gh.EventPath, err)
+			}
+		}
+	}
+	return nil
 }
 
 type CheckRun struct {

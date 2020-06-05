@@ -53,8 +53,11 @@ func init() {
 	// } else {
 
 	// }
+
 	Github.PersistentFlags().Int64Var(&client.RunID, "run-id", 0, "")
 	Github.PersistentFlags().StringVar(&client.Token, "token", os.Getenv("GITHUB_TOKEN"), "")
+	Github.PersistentFlags().StringVar(&client.EventType, "event-type", os.Getenv("GITHUB_EVENT_NAME"), "")
+	Github.PersistentFlags().StringVar(&client.EventPath, "event-path", os.Getenv("GITHUB_EVENT_PATH"), "")
 	Github.PersistentFlags().StringVar(&client.Build, "build", "", "")
 	Github.AddCommand(Actions, PullRequests)
 }
