@@ -70,10 +70,8 @@ func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 			switch test.Status {
 			case junit.StatusFailed:
 				annotation.AnnotationLevel = &AnnotationFailure
-			case junit.StatusSkipped:
-				annotation.AnnotationLevel = &AnnotationWarning
 			default:
-				annotation.AnnotationLevel = &AnnotationNotice
+				continue
 			}
 
 			list = append(list, annotation)
