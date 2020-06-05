@@ -57,7 +57,10 @@ func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 			return list
 		}
 		for _, test := range suite.Tests {
-			msg := test.Error.Error()
+			var msg string
+			if test.Error != nil {
+				msg = test.Error.Error()
+			}
 			if msg == "" {
 				msg = test.Name
 			}
