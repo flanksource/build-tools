@@ -47,13 +47,13 @@ func init() {
 	}
 
 	Github.PersistentFlags().StringVar(&client.SHA, "sha", os.Getenv("GITHUB_SHA"), "")
-	if os.Getenv("GITHUB_RUN_ID") != "" {
-		runId, _ := strconv.Atoi(os.Getenv("GITHUB_RUN_ID"))
-		Github.PersistentFlags().Int64Var(&client.RunID, "run-id", int64(runId), "")
-	} else {
-		Github.PersistentFlags().Int64Var(&client.RunID, "run-id", 0, "")
-	}
+	// if os.Getenv("GITHUB_RUN_ID") != "" {
+	// 	runId, _ := strconv.Atoi(os.Getenv("GITHUB_RUN_ID"))
+	// 	Github.PersistentFlags().Int64Var(&client.RunID, "run-id", int64(runId), "")
+	// } else {
 
+	// }
+	Github.PersistentFlags().Int64Var(&client.RunID, "run-id", 0, "")
 	Github.PersistentFlags().StringVar(&client.Token, "token", os.Getenv("GITHUB_TOKEN"), "")
 	Github.PersistentFlags().StringVar(&client.Build, "build", "", "")
 	Github.AddCommand(Actions, PullRequests)

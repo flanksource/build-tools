@@ -12,7 +12,7 @@ import (
 
 type Client struct {
 	*github.Client
-	context.Context
+	*github.PullRequestEvent
 	Repo, Owner     string
 	Token           string
 	Workflow, Build string
@@ -52,7 +52,7 @@ func (gh *Client) GetActionRun() (*CheckRun, error) {
 	if gh.SHA == "" || gh.Build == "" {
 		return nil, fmt.Errorf("must specify either --run-id or --sha and --build")
 	}
-	results, _, err := gh.Checks.ListCheckRunsForRef(gh, gh.Owner, gh.Repo, gh.SHA, &github.ListCheckRunsOptions{})
+	results, _, err := gh.Checks.ListCheckRunsForRef(gh, gh.Owner, gh.Repo, *gh.PullRequestEvent.PullRequest.Head.SHA, &github.ListCheckRunsOptions{})
 	if err != nil {
 		return nil, stacktrace.Propagate(err, "Error get action run %s/%s: %s", gh.Owner, gh.Repo, gh.SHA)
 	}
