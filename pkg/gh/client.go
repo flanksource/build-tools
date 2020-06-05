@@ -11,6 +11,7 @@ import (
 )
 
 type Client struct {
+	context.Context
 	*github.Client
 	*github.PullRequestEvent
 	Repo, Owner     string
