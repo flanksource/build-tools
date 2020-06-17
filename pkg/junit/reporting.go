@@ -22,7 +22,7 @@ const mdTableHeader = `| Result | Class | Message |
 
 func (results TestResults) GenerateMarkdown() string {
 	mdResult := ""
-	mdResult += fmt.Sprintf("<details><summary>%d test suites - Totals:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n",results.Suites, results.Total, results.Failed, results.Skipped,  results.Passed)
+	mdResult += fmt.Sprintf("<details><summary>%d test suites - Totals:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n",len(results.Suites), results.Total, results.Failed, results.Skipped,  results.Passed)
 
 	for _, suite := range results.Suites {
 		//44 tests, 21 passed, 0 failed, 23 skipped
