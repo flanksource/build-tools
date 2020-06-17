@@ -22,24 +22,30 @@ const mdTableHeader = `| Result | Class | Message |
 `
 
 func (results TestResults) GenerateMarkdown() string {
-	mdTable := ""
+	mdResult := ""
 	for _, suite := range results.Suites {
+		mdResult += "<details><summary>"+suite.Name+"</summary>\n"
+		mdResult += mdTableHeader
 		for _, test := range suite.Tests {
 			switch test.Status {
 			case junit.StatusFailed:
-				mdTable += fmt.Sprintf("| :x: | **%s** | `%s` |\n", test.Classname, test.Name)
-			case junit.StatusSkipped:
-				mdTable += fmt.Sprintf("| :white_circle: | **%s** | `%s` |\n", test.Classname, test.Name)
-			case junit.StatusPassed:
-				// we ignore successes - we comment only on failed and skipped results to cut down report size
-				break
+				mdResult += fmt.Sprintf("| :x: | **%s** | `%s` |\n", test.Classname, test.Name)
 				// no default:
 				// any other status will be ignored
 			}
 		}
+		for _, test := range suite.Tests {
+			switch test.Status {
+			case junit.StatusSkipped:
+				mdResult += fmt.Sprintf("| :white_circle: | **%s** | `%s` |\n", test.Classname, test.Name)
+				// no default:
+				// any other status will be ignored
+			}
+		}
+		mdResult += "\n</details>\n"
 	}
 
-	return mdTable
+	return mdResult
 }
 
 func toPtr(s string) *string {
