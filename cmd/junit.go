@@ -18,7 +18,7 @@ func init() {
 		Args:    cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			results, err := junit.ParseJunitResults(args...)
+			results, err := junit.ParseJunitResultFiles(args...)
 			if err != nil {
 				return err
 			}
