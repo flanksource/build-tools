@@ -6,7 +6,6 @@ package junit
 
 import (
 	"fmt"
-
 	"github.com/google/go-github/v31/github"
 	"github.com/joshdk/go-junit"
 )
@@ -22,24 +21,33 @@ const mdTableHeader = `| Result | Class | Message |
 `
 
 func (results TestResults) GenerateMarkdown() string {
-	mdTable := ""
+	mdResult := ""
+	mdResult += fmt.Sprintf("<details><summary>%d test suites - Totals:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n",len(results.Suites), results.Total, results.Failed, results.Skipped,  results.Passed)
+
 	for _, suite := range results.Suites {
+		//44 tests, 21 passed, 0 failed, 23 skipped
+		mdResult += fmt.Sprintf("<details><summary>%s:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n",suite.Name, suite.Totals.Tests, suite.Totals.Failed, suite.Totals.Skipped, suite.Totals.Passed)
+		mdResult += mdTableHeader
 		for _, test := range suite.Tests {
 			switch test.Status {
 			case junit.StatusFailed:
-				mdTable += fmt.Sprintf("| :x: | **%s** | `%s` |\n", test.Classname, test.Name)
-			case junit.StatusSkipped:
-				mdTable += fmt.Sprintf("| :white_circle: | **%s** | `%s` |\n", test.Classname, test.Name)
-			case junit.StatusPassed:
-				// we ignore successes - we comment only on failed and skipped results to cut down report size
-				break
+				mdResult += fmt.Sprintf("| :x: | **%s** | `%s` |\n", test.Classname, test.Name)
 				// no default:
 				// any other status will be ignored
 			}
 		}
+		for _, test := range suite.Tests {
+			switch test.Status {
+			case junit.StatusSkipped:
+				mdResult += fmt.Sprintf("| :white_circle: | **%s** | `%s` |\n", test.Classname, test.Name)
+				// no default:
+				// any other status will be ignored
+			}
+		}
+		mdResult += "\n</details>\n"
 	}
-
-	return mdTable
+	mdResult += "\n</details>\n"
+	return mdResult
 }
 
 func toPtr(s string) *string {

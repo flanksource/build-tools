@@ -16,7 +16,7 @@ var PullRequestReport = &cobra.Command{
 	Short: "Posts a comment detailing JUnit test results to a PR",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		results, err := junit.ParseJunitResults(args...)
+		results, err := junit.ParseJunitResultFiles(args...)
 		if err != nil {
 			return err
 		}
@@ -50,7 +50,7 @@ var ActionReport = &cobra.Command{
 	Short: "Update a check result with annotations",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		results, err := junit.ParseJunitResults(args...)
+		results, err := junit.ParseJunitResultFiles(args...)
 		if err != nil {
 			return err
 		}

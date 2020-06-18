@@ -15,36 +15,54 @@ type TestResults struct {
 	Passed  int
 }
 
-func ParseJunitResults(files ...string) (*TestResults, error) {
-	results := TestResults{}
+func ParseJunitResultFiles(files ...string) (*TestResults, error) {
+	results := make([][]byte, len(files))
 
 	for _, file := range files {
 		data, err := ioutil.ReadFile(file)
 		if err != nil {
 			return nil, err
 		}
-		suites, err := junit.Ingest(data)
+		results = append(results, data)
+	}
+	return ParseJunitResults(results...)
+}
+
+func ParseJunitResultStrings(resultStrings ...string) (*TestResults, error) {
+	results := make([][]byte, len(resultStrings))
+	for _, result := range resultStrings {
+		data := []byte(result)
+		results = append(results, data)
+	}
+	return ParseJunitResults(results...)
+}
+
+func ParseJunitResults(results ...[]byte) (*TestResults, error) {
+	tr := TestResults{}
+
+	for _, result := range results {
+		suites, err := junit.Ingest(result)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing %s: %v", file, err)
+			return nil, fmt.Errorf("error parsing %s: %v", result, err)
 		}
-		results.Suites = append(results.Suites, suites...)
+		tr.Suites = append(tr.Suites, suites...)
 	}
 
-	for _, suite := range results.Suites {
+	for _, suite := range tr.Suites {
 		for _, test := range suite.Tests {
-			results.Total++
+			tr.Total++
 			switch test.Status {
 			case "skipped":
-				results.Skipped++
+				tr.Skipped++
 			case "failed", "error":
-				results.Failed++
+				tr.Failed++
 			case "passed":
-				results.Passed++
+				tr.Passed++
 			}
 		}
 	}
 
-	return &results, nil
+	return &tr, nil
 }
 
 func (results TestResults) Success() bool {
