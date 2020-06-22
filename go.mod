@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/flanksource/commons v1.2.0
 	github.com/go-errors/errors v1.1.1
-	github.com/google/go-github/v31 v31.0.0
+
 	github.com/google/go-github/v32 v32.0.0
 	github.com/joshdk/go-junit v0.0.0-20200312181801-e5d93c0f31a8
 	github.com/palantir/stacktrace v0.0.0-20161112013806-78658fd2d177
