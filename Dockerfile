@@ -45,6 +45,11 @@ RUN mv /root/go/bin/esc /usr/local/bin/
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
+RUN wget -nv --output-file govc.gz https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_linux_amd64.gz && \
+    gunzip govc.gz && \
+    chmod +x govc && \
+    mv govc /usr/local/bin/
+
 #ENTRYPOINT [ "/bin/build-tools" ]
 
 
