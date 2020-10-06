@@ -8,11 +8,10 @@ RUN  apt-get update && apt-get install -y xz-utils && \
     wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
 RUN GOOS=linux GOARCH=amd64 make setup linux compress
 
-
 FROM ubuntu:bionic
 COPY --from=builder /app/.bin/build-tools /bin/
 ARG SYSTOOLS_VERSION=3.6
-
+COPY ./ ./
 RUN apt-get update && \
   apt-get install -y  genisoimage gnupg-agent curl apt-transport-https wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils ca-certificates unzip zip software-properties-common && \
   add-apt-repository ppa:longsleep/golang-backports && \
@@ -39,17 +38,17 @@ RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/
   bzip2 -d linux-amd64-github-release.bz2 && \
   chmod +x linux-amd64-github-release && \
   mv linux-amd64-github-release /usr/local/bin/github-release
-RUN npm install -g netlify-cli now gh
+RUN npm install -g npm@latest && hash -r && npm install node --reinstall-packages-from=node
+RUN npm install -g netlify-cli gh
 RUN go get github.com/mjibson/esc
 RUN mv /root/go/bin/esc /usr/local/bin/
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-RUN wget -nv --output-file govc.gz https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_linux_amd64.gz && \
+RUN wget -nv -O govc.gz https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_linux_amd64.gz && \
     gunzip govc.gz && \
     chmod +x govc && \
     mv govc /usr/local/bin/
-
 #ENTRYPOINT [ "/bin/build-tools" ]
 
 

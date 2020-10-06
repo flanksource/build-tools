@@ -1,7 +1,7 @@
 name: Publish Docker
 on:
   push:
-    tags:
+    tags: "*"
 jobs:
   build:
     runs-on: ubuntu-latest
