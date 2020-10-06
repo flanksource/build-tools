@@ -1,0 +1,39 @@
+name: Test Docker
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          driver-opts: network=host
+      - name: Build image for testing
+        id: build_image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: localhost:5000/flanksource/build-tools:test
+      - name: Install goss
+        run: |
+          mkdir ~/bin
+          export GOSS_DST=~/bin
+          export PATH=$PATH:~/bin
+          curl -fsSL https://goss.rocks/install | sh
+          goss -version
+      - name: Execute goss test
+        run: |
+          mkdir -p ./reports/goss
+          export PATH=$PATH:~/bin
+          export GOSS_FILES_STRATEGY=cp
+          export GOSS_FILES_PATH=test 
+          export GOSS_OPTS="$GOSS_OPTS --format junit"
+          dgoss run --entrypoint=./test/fakeentry.sh localhost:5000/flanksource/build-tools:test
