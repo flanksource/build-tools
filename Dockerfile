@@ -8,7 +8,8 @@ RUN  apt-get update && apt-get install -y xz-utils && \
     wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
 RUN GOOS=linux GOARCH=amd64 make setup linux compress
 
-FROM ubuntu:bionic
+FROM summerwind/actions-runner:v2.273.4
+USER root
 COPY --from=builder /app/.bin/build-tools /bin/
 ARG SYSTOOLS_VERSION=3.6
 COPY ./ ./
@@ -49,6 +50,7 @@ RUN wget -nv -O govc.gz https://github.com/vmware/govmomi/releases/download/v0.2
     gunzip govc.gz && \
     chmod +x govc && \
     mv govc /usr/local/bin/
-#ENTRYPOINT [ "/bin/build-tools" ]
+USER runner:runner
+# Do not override entrypoint, the one specified in the summerwind image is required
 
 

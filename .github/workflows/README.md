@@ -19,7 +19,9 @@ release.
 The docker workflow is also triggered by a tag push, and generates a docker
 image containing the build-tools utility as well as a number of other useful
 executables.  The image is published to the [Flanksource
-Dockerhub](https://hub.docker.com/r/flanksource/build-tools)
+Dockerhub](https://hub.docker.com/r/flanksource/build-tools). The generated
+image can be used as a [k8s self-hosted github
+runner](https://github.com/summerwind/actions-runner-controller)
 
 #### dockertest.yaml
 
