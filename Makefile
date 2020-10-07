@@ -18,8 +18,8 @@ release: setup linux darwin compress
 
 .PHONY: setup
 setup:
-	which esc 2>&1 > /dev/null || go get -u github.com/mjibson/esc
-	which github-release 2>&1 > /dev/null || go get github.com/aktau/github-release
+	command -v esc 2>&1 > /dev/null || go get -u github.com/mjibson/esc
+	command -v github-release 2>&1 > /dev/null || go get github.com/aktau/github-release
 
 .PHONY: build
 build:
@@ -49,6 +49,11 @@ install:
 .PHONY: docker
 docker:
 	docker build ./ -t $(NAME)
+
+.PHONY: test
+test: docker
+	command -v dgoss 2>&1 > /dev/null || test/installgoss.sh
+	GOSS_FILES_PATH=test dgoss run --entrypoint=./test/fakeentry.sh $(NAME)
 
 #.PHONY: serve-docs
 #serve-docs:
