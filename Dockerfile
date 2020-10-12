@@ -43,6 +43,10 @@ RUN npm install -g npm@latest && hash -r && npm install node --reinstall-package
 RUN npm install -g netlify-cli gh
 RUN go get github.com/mjibson/esc
 RUN mv /root/go/bin/esc /usr/local/bin/
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64 && \
+    chmod +x ./kind && \
+    mv ./kind /usr/local/bin/
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.31.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
