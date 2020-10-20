@@ -3,16 +3,10 @@
 It is recommended that forks of this repo disable github actions if they do not
 wish to also publish build artefacts
 
-#### bump.yaml
-
-The bump workflow automatically tags new commits to master with a monotincally
-increasing version number
-
 #### binary.yaml
 
-The binary workflow is triggered on a tag push (usually as a result of the bump
-workflow).  It generates the build-tools binary and publishes it as a GitHub
-release.
+The binary workflow is triggered on a tag push.  It generates the build-tools
+binary and publishes it as a GitHub release.
 
 #### docker.yaml
 
