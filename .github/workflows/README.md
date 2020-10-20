@@ -3,18 +3,20 @@
 It is recommended that forks of this repo disable github actions if they do not
 wish to also publish build artefacts
 
-#### release.yaml
+#### bump.yaml
 
-Creates a new release when a tag is pushed to the repository
+The bump workflow automatically tags new commits to master with a monotincally
+increasing version number
 
 #### binary.yaml
 
-The binary workflow is triggered on a release.  It generates the build-tools
-binary and publishes them to the release.
+The binary workflow is triggered on a tag push (usually as a result of the bump
+workflow).  It generates the build-tools binary and publishes it as a GitHub
+release.
 
 #### docker.yaml
 
-The docker workflow is also triggered by a release, and generates a docker
+The docker workflow is also triggered by a tag push, and generates a docker
 image containing the build-tools utility as well as a number of other useful
 executables.  The image is published to the [Flanksource
 Dockerhub](https://hub.docker.com/r/flanksource/build-tools). The generated
