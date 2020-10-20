@@ -34,6 +34,6 @@ jobs:
           mkdir -p ./reports/goss
           export PATH=$PATH:~/bin
           export GOSS_FILES_STRATEGY=cp
-          export GOSS_FILES_PATH=test 
+          export GOSS_FILES_PATH=test
           export GOSS_OPTS="$GOSS_OPTS --format junit"
           dgoss run --entrypoint=./test/fakeentry.sh localhost:5000/flanksource/build-tools:test
