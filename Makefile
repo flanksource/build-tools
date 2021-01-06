@@ -19,7 +19,6 @@ release: setup linux darwin compress
 .PHONY: setup
 setup:
 	command -v esc 2>&1 > /dev/null || go get -u github.com/mjibson/esc
-	command -v github-release 2>&1 > /dev/null || go get github.com/aktau/github-release
 
 .PHONY: build
 build:
@@ -40,7 +39,7 @@ darwin:
 
 .PHONY: compress
 compress:
-	upx -5 ./.bin/*
+	upx -5 -v ./.bin/*
 
 .PHONY: install
 install:
