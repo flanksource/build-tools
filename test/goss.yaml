@@ -73,7 +73,7 @@ command:
     stderr: []
     timeout: 10000
 file:
-  /runner/entrypoint.sh:
+  /usr/local/bin/entrypoint.sh:
     exists: true
     mode: "0755"
     owner: root
