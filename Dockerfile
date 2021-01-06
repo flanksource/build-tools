@@ -54,7 +54,7 @@ RUN wget -nv -O govc.gz https://github.com/vmware/govmomi/releases/download/v0.2
     gunzip govc.gz && \
     chmod +x govc && \
     mv govc /usr/local/bin/
-USER runner:runner
+USER runner
 # Do not override entrypoint, the one specified in the summerwind image is required
 
 
