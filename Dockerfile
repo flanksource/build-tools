@@ -14,7 +14,7 @@ COPY --from=builder /app/.bin/build-tools /bin/
 ARG SYSTOOLS_VERSION=3.6
 COPY ./ ./
 RUN apt-get update && \
-  apt-get install -y  genisoimage gnupg-agent curl apt-transport-https wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils ca-certificates unzip zip software-properties-common && \
+  apt-get install -y  genisoimage gnupg-agent curl apt-transport-https wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils ca-certificates unzip zip software-properties-common sshuttle && \
   add-apt-repository ppa:longsleep/golang-backports && \
   apt update && \
   apt install -y golang-go && \
