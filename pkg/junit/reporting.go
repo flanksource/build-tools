@@ -5,7 +5,10 @@ This file is part of Flanksource build tools
 package junit
 
 import (
+	"errors"
 	"fmt"
+
+	"github.com/flanksource/build-tools/pkg/tesults"
 	"github.com/google/go-github/v32/github"
 	"github.com/joshdk/go-junit"
 )
@@ -22,11 +25,11 @@ const mdTableHeader = `| Result | Class | Message |
 
 func (results TestResults) GenerateMarkdown() string {
 	mdResult := ""
-	mdResult += fmt.Sprintf("<details><summary>%d test suites - Totals:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n",len(results.Suites), results.Total, results.Failed, results.Skipped,  results.Passed)
+	mdResult += fmt.Sprintf("<details><summary>%d test suites - Totals:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n", len(results.Suites), results.Total, results.Failed, results.Skipped, results.Passed)
 
 	for _, suite := range results.Suites {
 		//44 tests, 21 passed, 0 failed, 23 skipped
-		mdResult += fmt.Sprintf("<details><summary>%s:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n",suite.Name, suite.Totals.Tests, suite.Totals.Failed, suite.Totals.Skipped, suite.Totals.Passed)
+		mdResult += fmt.Sprintf("<details><summary>%s:  %d tests, %d failed, %d skipped, %d passed</summary>\n\n", suite.Name, suite.Totals.Tests, suite.Totals.Failed, suite.Totals.Skipped, suite.Totals.Passed)
 		mdResult += mdTableHeader
 		for _, test := range suite.Tests {
 			switch test.Status {
@@ -87,4 +90,39 @@ func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 	}
 
 	return list
+}
+
+var RESULT_MAP = map[string]string{
+	"passed":  "pass",
+	"skipped": "unknown",
+	"failure": "fail",
+	"error":   "fail",
+}
+
+func (results TestResults) UploadToTesults(token string) error {
+	data := map[string]interface{}{
+		"target":  token,
+		"results": map[string]interface{}{},
+	}
+	testResults := []interface{}{}
+	for _, suite := range results.Suites {
+		for _, test := range suite.Tests {
+			result := map[string]interface{}{
+				"name":     test.Name,
+				"suite":    suite.Name,
+				"result":   RESULT_MAP[string(test.Status)],
+				"reason":   test.Error.Error(),
+				"duration": test.Duration.Milliseconds(),
+				"_stdout":  test.SystemOut,
+				"_stderr":  test.SystemErr,
+			}
+			testResults = append(testResults, result)
+		}
+	}
+	data["results"] = testResults
+	result := tesults.Results(data)
+	if !result["success"].(bool) {
+		return errors.New(result["message"].(string))
+	}
+	return nil
 }
