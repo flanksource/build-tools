@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -31,7 +32,7 @@ func init() {
 	Junit.AddCommand(&cobra.Command{
 		Use:     "passfail",
 		Aliases: []string{"pf"},
-		Short: "Print result summary for JUnit test and set exit code to 1 if there are failed tests.",
+		Short:   "Print result summary for JUnit test and set exit code to 1 if there are failed tests.",
 		Args:    cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
@@ -47,4 +48,23 @@ func init() {
 			return nil
 		},
 	})
+	tesultsCommand := &cobra.Command{
+		Use:     "upload-tesults",
+		Aliases: []string{"ut"},
+		Short:   "Upload test results for a JUnit test to Tesults. Requires a Tesults token passed in or as TESULTS_TOKEN environment variable.",
+		Args:    cobra.MinimumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if tesultsToken, _ := cmd.Flags().GetString("token"); tesultsToken != "" {
+				results, err := junit.ParseJunitResultFiles(args...)
+				if err != nil {
+					return err
+				}
+				return results.UploadToTesults(tesultsToken)
+			}
+			return errors.New("No Tesults token supplied")
+		},
+	}
+	tesultsCommand.Flags().StringP("token", "t", os.Getenv("TESULTS_TOKEN"),
+		"The tesults token to use for the upload. Defaults to the TESULTS_TOKEN environment variable.")
+	Junit.AddCommand(tesultsCommand)
 }
