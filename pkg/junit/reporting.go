@@ -100,10 +100,6 @@ var RESULT_MAP = map[string]string{
 }
 
 func (results TestResults) UploadToTesults(token string) error {
-	data := map[string]interface{}{
-		"target":  token,
-		"results": map[string]interface{}{},
-	}
 	testResults := []interface{}{}
 	for _, suite := range results.Suites {
 		for _, test := range suite.Tests {
@@ -111,15 +107,23 @@ func (results TestResults) UploadToTesults(token string) error {
 				"name":     test.Name,
 				"suite":    suite.Name,
 				"result":   RESULT_MAP[string(test.Status)],
-				"reason":   test.Error.Error(),
+				"reason":   "",
 				"duration": test.Duration.Milliseconds(),
 				"_stdout":  test.SystemOut,
 				"_stderr":  test.SystemErr,
 			}
+			if test.Error != nil {
+				result["reason"] = test.Error.Error()
+			}
 			testResults = append(testResults, result)
 		}
 	}
-	data["results"] = testResults
+	data := map[string]interface{}{
+		"target": token,
+		"results": map[string]interface{}{
+			"cases": testResults,
+		},
+	}
 	result := tesults.Results(data)
 	if !result["success"].(bool) {
 		return errors.New(result["message"].(string))
