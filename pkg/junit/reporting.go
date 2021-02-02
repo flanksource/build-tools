@@ -95,31 +95,35 @@ func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 var RESULT_MAP = map[string]string{
 	"passed":  "pass",
 	"skipped": "unknown",
-	"failure": "fail",
+	"failed":  "fail",
 	"error":   "fail",
 }
 
 func (results TestResults) UploadToTesults(token string) error {
-	data := map[string]interface{}{
-		"target":  token,
-		"results": map[string]interface{}{},
-	}
-	testResults := []interface{}{}
+	testResults := make([]interface{}, 0)
 	for _, suite := range results.Suites {
 		for _, test := range suite.Tests {
 			result := map[string]interface{}{
 				"name":     test.Name,
 				"suite":    suite.Name,
 				"result":   RESULT_MAP[string(test.Status)],
-				"reason":   test.Error.Error(),
+				"reason":   "",
 				"duration": test.Duration.Milliseconds(),
 				"_stdout":  test.SystemOut,
 				"_stderr":  test.SystemErr,
 			}
+			if test.Error != nil {
+				result["reason"] = test.Error.Error()
+			}
 			testResults = append(testResults, result)
 		}
 	}
-	data["results"] = testResults
+	data := map[string]interface{}{
+		"target": token,
+		"results": map[string]interface{}{
+			"cases": testResults,
+		},
+	}
 	result := tesults.Results(data)
 	if !result["success"].(bool) {
 		return errors.New(result["message"].(string))
