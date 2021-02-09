@@ -8,7 +8,7 @@ RUN  apt-get update && apt-get install -y xz-utils && \
     wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
 RUN GOOS=linux GOARCH=amd64 make setup linux compress
 
-FROM summerwind/actions-runner-dind:v2.275.1
+FROM summerwind/actions-runner-dind:v2.277.1
 USER root
 COPY --from=builder /app/.bin/build-tools /bin/
 ARG SYSTOOLS_VERSION=3.6
@@ -34,7 +34,7 @@ ARG SOPS_VERSION=3.5.0
 RUN install_deb https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops_${SOPS_VERSION}_amd64.deb
 RUN install_bin https://github.com/CrunchyData/postgres-operator/releases/download/v4.1.0/expenv
 RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8bd32d/gojsontoyaml
-RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1
+RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1 mkdocs-same-dir mkdocs-autolinks-plugin mkdocs-material-extensions mkdocs-markdownextradata-plugin
 RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/linux-amd64-github-release.bz2 &&  \
   bzip2 -d linux-amd64-github-release.bz2 && \
   chmod +x linux-amd64-github-release && \
@@ -43,10 +43,10 @@ RUN npm install -g npm@latest && hash -r && npm install node --reinstall-package
 RUN npm install -g netlify-cli gh
 RUN go get github.com/mjibson/esc
 RUN mv /root/go/bin/esc /usr/local/bin/
-RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64 && \
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64 && \
     chmod +x ./kind && \
     mv ./kind /usr/local/bin/
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.31.0
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.36.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
