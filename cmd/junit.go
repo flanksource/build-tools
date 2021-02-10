@@ -48,6 +48,26 @@ func init() {
 			return nil
 		},
 	})
+
+	Junit.AddCommand(&cobra.Command{
+		Use:   "gh-workflow-commands",
+		Short: "Print result in a format that Github actions can convert into errors/warnings",
+		Args:  cobra.MinimumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+
+			results, err := junit.ParseJunitResultFiles(args...)
+			if err != nil {
+				return err
+			}
+			fmt.Println(results.GenerateGithubWorkflowCommands())
+			if results.Failed > 0 {
+				os.Exit(1)
+			}
+
+			return nil
+		},
+	})
+
 	tesultsCommand := &cobra.Command{
 		Use:     "upload-tesults",
 		Aliases: []string{"ut"},

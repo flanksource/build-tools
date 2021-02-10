@@ -7,6 +7,7 @@ package junit
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/flanksource/build-tools/pkg/tesults"
 	"github.com/google/go-github/v32/github"
@@ -58,6 +59,53 @@ func toPtr(s string) *string {
 }
 
 const MAX_ANNOTATIONS = 50
+const GH_DEBUG = "::debug %s::%s\n"
+const GH_ERROR = "::error %s::%s\n"
+
+const GH_WARNING = "::warning %s %s::%s\n"
+const GH_SKIP = "::debug %s::SKIPPED%s\n"
+
+func TestName(t junit.Test) string {
+	name := strings.Split(t.Name, ":")[0]
+	if t.Classname != name {
+		return t.Classname + "." + name
+	}
+	return name
+}
+
+func GithubWorkflowName(t junit.Test, suite junit.Suite) string {
+	parts := strings.Split(t.Name, ":")
+	name := TestName(t)
+	if name != suite.Name {
+		name = suite.Name + "." + name
+	}
+	if len(parts) == 3 {
+		return fmt.Sprintf("file=%s,line=%d,col=%d", name, parts[1], parts[2])
+	}
+	return name
+}
+
+func (results TestResults) GenerateGithubWorkflowCommands() string {
+	result := ""
+	result += fmt.Sprintf(GH_WARNING, "", "", fmt.Sprintf("%d suites %d tests, %d failed, %d skipped, %d passed", len(results.Suites), results.Total, results.Failed, results.Skipped, results.Passed))
+
+	for _, suite := range results.Suites {
+		for _, test := range suite.Tests {
+
+			msg := ""
+			if test.Error != nil {
+				msg = strings.Split(strings.TrimSpace(test.Error.Error()), "\n")[0]
+			}
+			switch test.Status {
+			case junit.StatusFailed:
+				result += fmt.Sprintf(GH_ERROR, GithubWorkflowName(test, suite), msg)
+			case junit.StatusSkipped:
+				result += fmt.Sprintf(GH_SKIP, GithubWorkflowName(test, suite), msg)
+			}
+		}
+	}
+	return result
+}
 
 func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 	list := []*github.CheckRunAnnotation{}
