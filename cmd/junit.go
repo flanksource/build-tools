@@ -79,12 +79,18 @@ func init() {
 				if err != nil {
 					return err
 				}
-				return results.UploadToTesults(tesultsToken)
+				failOnSkip, err := cmd.Flags().GetBool("fail-on-skipped")
+				if err != nil {
+					return err
+				}
+				return results.UploadToTesults(tesultsToken, failOnSkip)
 			}
 			return errors.New("No Tesults token supplied")
 		},
 	}
 	tesultsCommand.Flags().StringP("token", "t", os.Getenv("TESULTS_TOKEN"),
 		"The tesults token to use for the upload. Defaults to the TESULTS_TOKEN environment variable.")
+	tesultsCommand.Flags().Bool("fail-on-skipped", false,
+		"If true, skipped tests are treated as failures when uploading results. Defaults to false.")
 	Junit.AddCommand(tesultsCommand)
 }
