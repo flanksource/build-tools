@@ -149,27 +149,40 @@ func (results TestResults) GetGithubAnnotations() []*github.CheckRunAnnotation {
 }
 
 var RESULT_MAP = map[string]string{
-	"passed":  "pass",
-	"skipped": "unknown",
-	"failed":  "fail",
-	"error":   "fail",
+	"passed":       "pass",
+	"skipped-fail": "fail",
+	"skipped-pass": "pass",
+	"failed":       "fail",
+	"error":        "fail",
 }
 
-func (results TestResults) UploadToTesults(token string) error {
+func (results TestResults) UploadToTesults(token string, failOnSkip bool) error {
 	testResults := make([]interface{}, 0)
 	for _, suite := range results.Suites {
 		for _, test := range suite.Tests {
+			resultString := string(test.Status)
+			if test.Status == junit.StatusSkipped {
+				if failOnSkip {
+					resultString += "-fail"
+				} else {
+					resultString += "-pass"
+				}
+			}
 			result := map[string]interface{}{
-				"name":     test.Name,
-				"suite":    suite.Name,
-				"result":   RESULT_MAP[string(test.Status)],
-				"reason":   "",
-				"duration": test.Duration.Milliseconds(),
-				"_stdout":  test.SystemOut,
-				"_stderr":  test.SystemErr,
+				"name":        test.Classname,
+				"suite":       suite.Name,
+				"description": test.Name,
+				"result":      RESULT_MAP[resultString],
+				"reason":      "",
+				"duration":    test.Duration.Milliseconds(),
+				"_stdout":     test.SystemOut,
+				"_stderr":     test.SystemErr,
 			}
 			if test.Error != nil {
 				result["reason"] = test.Error.Error()
+			}
+			if failOnSkip && test.Status == junit.StatusSkipped {
+				result["reason"] = test.Name
 			}
 			testResults = append(testResults, result)
 		}
