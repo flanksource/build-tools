@@ -11,7 +11,7 @@ endif
 
 
 .PHONY: release
-release: setup linux darwin compress
+release: linux darwin compress
 
 
 .PHONY: build
