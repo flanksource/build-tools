@@ -1,3 +1,4 @@
+ARG BASEIMAGE=ubuntu:focal
 FROM golang:1.13.6 as builder
 WORKDIR /app
 COPY ./ ./
@@ -8,9 +9,11 @@ RUN  apt-get update && apt-get install -y xz-utils && \
   wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
 RUN GOOS=linux GOARCH=amd64 make linux compress
 
-FROM summerwind/actions-runner-dind:v2.276.1
+ARG BASEIMAGE=ubuntu:focal
+FROM $BASEIMAGE
 USER root
 RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && \
   apt-get install -y  genisoimage gnupg-agent curl apt-transport-https wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils ca-certificates unzip zip software-properties-common sshuttle && \
   add-apt-repository ppa:longsleep/golang-backports && \
   apt update && \
@@ -53,7 +56,8 @@ RUN wget -nv -O govc.gz https://github.com/vmware/govmomi/releases/download/v0.2
   mv govc /usr/local/bin/
 COPY --from=builder /app/.bin/build-tools /bin/
 COPY ./ ./
-USER runner
+ARG USER=root
+USER $USER
 # Do not override entrypoint, the one specified in the summerwind image is required
 
 

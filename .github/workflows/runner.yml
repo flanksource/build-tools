@@ -10,9 +10,13 @@ jobs:
       - uses: actions/checkout@master
       - name: Publish Build Image to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
+        env:
+          BASEIMAGE: summerwind/actions-runner-dind:v2.276.1
+          USER: runner
         with:
-          name: flanksource/build-tools
+          name: flanksource/build-runner
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
           snapshot: true
+          buildargs: BASEIMAGE, USER

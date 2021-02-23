@@ -72,11 +72,3 @@ command:
     - \/usr/bin/upx
     stderr: []
     timeout: 10000
-file:
-  /usr/local/bin/entrypoint.sh:
-    exists: true
-    mode: "0755"
-    owner: root
-    group: root
-    filetype: file
-    contains: []
