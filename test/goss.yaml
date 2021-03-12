@@ -7,8 +7,6 @@ package:
     installed: true
   git:
     installed: true
-  golang-go:
-    installed: true
   python3-dev:
     installed: true
   sops:
@@ -21,54 +19,60 @@ command:
   command -v build-tools:
     exit-status: 0
     stdout:
-    - \/bin/build-tools
+      - \/bin/build-tools
     stderr: []
     timeout: 10000
   command -v esc:
     exit-status: 0
     stdout:
-    - \/usr/local/bin/esc
+      - \/usr/local/bin/esc
     stderr: []
     timeout: 10000
   command -v expenv:
     exit-status: 0
     stdout:
-    - \/usr/bin/expenv
+      - \/usr/bin/expenv
     stderr: []
     timeout: 10000
   command -v gh:
     exit-status: 0
     stdout:
-    - \/usr/local/bin/gh
+      - \/usr/local/bin/gh
     stderr: []
     timeout: 10000
   command -v github-release:
     exit-status: 0
     stdout:
-    - \/usr/local/bin/github-release
+      - \/usr/local/bin/github-release
     stderr: []
     timeout: 10000
   command -v gojsontoyaml:
     exit-status: 0
     stdout:
-    - \/usr/bin/gojsontoyaml
+      - \/usr/bin/gojsontoyaml
     stderr: []
     timeout: 10000
   command -v govc:
     exit-status: 0
     stdout:
-    - \/usr/local/bin/govc
+      - \/usr/local/bin/govc
     stderr: []
     timeout: 10000
   command -v netlify:
     exit-status: 0
     stdout:
-    - \/usr/local/bin/netlify
+      - \/usr/local/bin/netlify
     stderr: []
     timeout: 10000
   command -v upx:
     exit-status: 0
     stdout:
-    - \/usr/bin/upx
+      - \/usr/bin/upx
+    stderr: []
+    timeout: 10000
+  command -v go:
+    exit-status: 0
+    stdout:
+      - \/usr/local/go/bin/go
     stderr: []
     timeout: 10000
