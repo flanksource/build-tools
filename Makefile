@@ -6,7 +6,7 @@ ifeq ($(GITHUB_REF),)
 GITHUB_REF := dev
 endif
 ifeq ($(VERSION),)
-VERSION := v$(shell git describe --tags --exclude "*-g*" ) built $(shell date)
+VERSION := $(shell git describe --tags --exclude "*-g*" ) built $(shell date)
 endif
 
 
@@ -29,7 +29,7 @@ darwin:
 
 .PHONY: compress
 compress:
-	upx -5 -v ./.bin/*
+	upx -5 -v ./.bin/build-tools
 
 .PHONY: install
 install:
