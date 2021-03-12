@@ -17,7 +17,7 @@ FROM $BASEIMAGE
 USER root
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y  \
   genisoimage gnupg-agent curl apt-transport-https wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils ca-certificates \
-  unzip zip software-properties-common sshuttle podman buildah tzdata runc && \
+  unzip zip software-properties-common sshuttle tzdata  && \
   rm -Rf /var/lib/apt/lists/*  && \
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
   apt-get clean
