@@ -41,6 +41,7 @@ if [[ "$DOCKERD_IN_RUNNER" == "true" ]]; then
 fi
 
 if [[ "$RUNNER_NAME" != "" ]]; then
+    sysctl fs.inotify.max_user_watches=128000
     su runner -c /runner.sh
 else
     sudo bash
