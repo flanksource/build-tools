@@ -44,6 +44,7 @@ RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/
   bzip2 -d linux-amd64-github-release.bz2 && \
   chmod +x linux-amd64-github-release && \
   mv linux-amd64-github-release /usr/local/bin/github-release
+RUN npm install -g npm@latest
 RUN npm install -g pnpm
 RUN pnpm install -g netlify-cli gh
 RUN go get github.com/mjibson/esc
@@ -54,7 +55,6 @@ RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64 && \
 RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl && \
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin
-RUN alias docker=podman
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.36.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
