@@ -1,4 +1,14 @@
-# s
+FROM golang:1.13.6 as builder
+WORKDIR /app
+COPY ./ ./
+ARG NAME
+ARG VERSION
+# upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
+RUN  apt-get update && apt-get install -y xz-utils && \
+  wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
+RUN GOOS=linux GOARCH=amd64 make setup linux compress
+
+
 FROM ubuntu:20.10
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.274.2
@@ -6,7 +16,6 @@ ARG DOCKER_VERSION=19.03.12
 ENV ACTIONS_RUNNER_VERSION=actions-runner-controller-0.9.0
 ENV RUNNER_ASSETS_DIR=/runner
 ENV RUNNER_ALLOW_RUNASROOT true
-
 
 USER root
 RUN apt-get update  &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
