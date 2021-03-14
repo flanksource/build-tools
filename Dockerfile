@@ -1,22 +1,12 @@
-FROM golang:1.16 as builder
-# upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
-RUN  apt-get update && apt-get install -y xz-utils && \
-  wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
-WORKDIR /app
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
-COPY ./ ./
-ARG NAME
-ARG VERSION
-RUN GOOS=linux GOARCH=amd64 make linux compress
-
+# s
 FROM ubuntu:20.10
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.274.2
 ARG DOCKER_VERSION=19.03.12
 ENV ACTIONS_RUNNER_VERSION=actions-runner-controller-0.9.0
-ENV RUNNER_ASSETS_DIR=/runnertmp
+ENV RUNNER_ASSETS_DIR=/runner
+ENV RUNNER_ALLOW_RUNASROOT true
+
 
 USER root
 RUN apt-get update  &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
@@ -96,6 +86,8 @@ RUN mkdir -p "$RUNNER_ASSETS_DIR" \
   && rm runner.tar.gz \
   && mv ./externals ./externalstmp
 
+RUN chown -R runner:docker $RUNNER_ASSETS_DIR
+
 RUN echo AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache > .env \
   && mkdir /opt/hostedtoolcache \
   && chgrp docker /opt/hostedtoolcache \
@@ -112,17 +104,9 @@ RUN wget -nv -O /etc/supervisor/conf.d/dockerd.conf https://raw.githubuserconten
 RUN mkdir -p /opt/bash-utils/ && wget -nv -O /opt/bash-utils/logger.sh  https://raw.githubusercontent.com/summerwind/actions-runner-controller/${ACTIONS_RUNNER_VERSION}/runner/logger.sh && \
   chmod +x  /opt/bash-utils/logger.sh
 
-RUN wget -nv -O  ${RUNNER_ASSETS_DIR}/RunnerService.js https://raw.githubusercontent.com/summerwind/actions-runner-controller/${ACTIONS_RUNNER_VERSION}/runner/patched/RunnerService.js && \
-  chmod +x ${RUNNER_ASSETS_DIR}/RunnerService.js
-
-RUN wget -nv -O  ${RUNNER_ASSETS_DIR}/runsvc.sh  https://raw.githubusercontent.com/summerwind/actions-runner-controller/${ACTIONS_RUNNER_VERSION}/runner/patched/runsvc.sh && \
-  chmod +x  ${RUNNER_ASSETS_DIR}/runsvc.sh
-
+COPY runner.sh /runner.sh
 COPY startup.sh /startup.sh
+COPY --from=builder /app/.bin/build-tools /bin/
 
-# COPY --from=builder /app/.bin/build-tools /bin/
-# COPY ./ ./
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 CMD ["/startup.sh"]
-
-

@@ -16,37 +16,32 @@ function wait_for_process () {
     return 0
 }
 
-set -x
-
 INFO "Starting runner DOCKERD_IN_RUNNER=$DOCKERD_IN_RUNNER RUNNER_NAME=$RUNNER_NAME"
 
-
-
-if [[ "$DOCKERD_IN_RUNNER" ]]; then
-  INFO "Starting supervisor"
-  sudo /usr/bin/supervisord -n >> /dev/null 2>&1 &
-
-  INFO "Waiting for processes to be running"
-  processes=(dockerd)
-
-  for process in "${processes[@]}"; do
-      wait_for_process "$process"
-      if [ $? -ne 0 ]; then
-          ERROR "$process is not running after max time"
-          exit 1
-      else
-          INFO "$process is running"
-      fi
-  done
-
-  if [ -n "${MTU}" ]; then
-    ifconfig docker0 mtu ${MTU} up
-  fi
+if [[ "$DOCKERD_IN_RUNNER" == "true" ]]; then
+    INFO "Starting supervisor"
+    sudo /usr/bin/supervisord -n >> /dev/null 2>&1 &
+    
+    INFO "Waiting for processes to be running"
+    processes=(dockerd)
+    
+    for process in "${processes[@]}"; do
+        wait_for_process "$process"
+        if [ $? -ne 0 ]; then
+            ERROR "$process is not running after max time"
+            exit 1
+        else
+            INFO "$process is running"
+        fi
+    done
+    
+    if [ -n "${MTU}" ]; then
+        ifconfig docker0 mtu ${MTU} up
+    fi
 fi
 
 if [[ "$RUNNER_NAME" != "" ]]; then
-    su runner
-    /entrypoint.sh
+    su runner -c /runner.sh
 else
     sudo bash
 fi
