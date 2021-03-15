@@ -44,6 +44,7 @@ RUN wget -nv --no-check-certificate https://github.com/moshloop/systools/release
 ARG SOPS_VERSION=3.5.0
 RUN install_deb https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops_${SOPS_VERSION}_amd64.deb
 RUN install_bin https://github.com/CrunchyData/postgres-operator/releases/download/v4.1.0/expenv
+RUN install_bin https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64
 RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8bd32d/gojsontoyaml
 RUN install_bin https://github.com/atkrad/wait4x/releases/download/v0.3.0/wait4x-linux-amd64
 RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1 mkdocs-same-dir mkdocs-autolinks-plugin mkdocs-material-extensions mkdocs-markdownextradata-plugin
