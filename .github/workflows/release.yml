@@ -18,36 +18,6 @@ jobs:
           tag_names: true
           snapshot: true
 
-  binaries:
-    runs-on: ubuntu-20.04
-    needs: semantic-release
-    steps:
-      - uses: actions/checkout@v2
-      - run: make release
-      - name: Get release
-        id: get_release
-        uses: bruceadams/get-release@v1.2.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./.bin/build-tools
-          asset_name: build-tools
-          asset_content_type: application/octet-stream
-      - name: Upload MacOSX Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./.bin/build-tools_osx
-          asset_name: build-tools_osx
-          asset_content_type: application/octet-stream
-
   semantic-release:
     runs-on: ubuntu-20.04
     outputs:
@@ -59,6 +29,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+      - run: make release
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

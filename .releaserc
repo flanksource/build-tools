@@ -10,3 +10,8 @@ plugins:
         - { type: style, release: false }
   - "@semantic-release/release-notes-generator"
   - - "@semantic-release/github"
+    - assets:
+      - path: ./.bin/build-tools
+        name: build-tools
+      - path: ./.bin/build-tools_osx
+        name: build-tools_osx
