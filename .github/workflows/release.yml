@@ -6,6 +6,10 @@ on:
 jobs:
   semantic-release:
     runs-on: ubuntu-20.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node.js
@@ -13,9 +17,6 @@ jobs:
         with:
           node-version: 12
       - run: make release
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: npx -p @eclass/semantic-release-docker -p semantic-release semantic-release
