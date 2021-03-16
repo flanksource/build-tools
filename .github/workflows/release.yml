@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: make release
+      - run: make release docker
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Release
         run: npx -p @eclass/semantic-release-docker -p semantic-release semantic-release
