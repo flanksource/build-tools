@@ -16,7 +16,8 @@ plugins:
         - path: ./.bin/build-tools_osx
           name: build-tools_osx
   - - "@eclass/semantic-release-docker"
-    - registries:
+    - baseImageName: flanksource/build-tools
+      registries:
         - url: docker.io
           imageName: docker.io/flanksource/build-tools
           additionalTags:
