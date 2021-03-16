@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: 12
       - run: make release
+      - run: npm install -g @eclass/semantic-release-docker
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
