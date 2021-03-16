@@ -18,4 +18,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: npx -p @eclass/semantic-release-docker  semantic-release
+        run: npx -p @eclass/semantic-release-docker -p semantic-release semantic-release
