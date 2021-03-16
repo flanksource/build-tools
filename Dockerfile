@@ -19,14 +19,11 @@ ARG DOCKER_VERSION=19.03.12
 ENV ACTIONS_RUNNER_VERSION=actions-runner-controller-0.9.0
 ENV RUNNER_ASSETS_DIR=/runner
 ENV RUNNER_ALLOW_RUNASROOT true
-# upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
-RUN  apt-get update && apt-get install -y xz-utils && \
-  wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
 
 USER root
-RUN apt-get update  &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
+RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
   add-apt-repository universe && DEBIAN_FRONTEND=noninteractive apt-get install -y  \
-  genisoimage  wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils ca-certificates supervisor \
+  genisoimage  wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils upx-ucl ca-certificates supervisor \
   unzip zip software-properties-common sshuttle tzdata  openssh-client rsync shellcheck libunwind8 libyaml-dev libkrb5-3 zlib1g libicu67 liblttng-ust0 && \
   rm -Rf /var/lib/apt/lists/*  && \
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
@@ -37,12 +34,6 @@ RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.16.2.linux-amd64.tar.gz && \
   rm go.tar.gz
 
 ENV  PATH=$PATH:/usr/local/go/bin
-# upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
-RUN wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz && \
-  tar xf upx.tar.xz && \
-  mv upx-3.96-amd64_linux/upx /usr/bin && \
-  rm -rf upx-3.96-amd64_linux upx.tar.xz
-
 RUN wget -nv --no-check-certificate https://github.com/moshloop/systools/releases/download/3.6/systools.deb && dpkg -i systools.deb
 ARG SOPS_VERSION=3.5.0
 RUN install_deb https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops_${SOPS_VERSION}_amd64.deb
