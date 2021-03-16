@@ -13,10 +13,9 @@ jobs:
         with:
           node-version: 12
       - run: make release
-      - run: npm install -g @eclass/semantic-release-docker
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: npx semantic-release
+        run: npx -p @eclass/semantic-release-docker  semantic-release
