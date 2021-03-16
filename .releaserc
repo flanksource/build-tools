@@ -15,12 +15,6 @@ plugins:
           name: build-tools
         - path: ./.bin/build-tools_osx
           name: build-tools_osx
-  - - "@eclass/semantic-release-docker"
-    - baseImageName: build-tools
-      registries:
-        - url: docker.io
-          imageName: docker.io/flanksource/build-tools
-          user: DOCKER_USER
-          password: DOCKER_PASSWORD
-      additionalTags:
-        - latest
+
+  - - "@semantic-release/exec"
+    - publishCmd: docker tag build-tools flanksource/build-tools:v${nextRelease.version} && docker push flanksource/build-tools:v${nextRelease.version}
