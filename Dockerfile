@@ -19,6 +19,9 @@ ARG DOCKER_VERSION=19.03.12
 ENV ACTIONS_RUNNER_VERSION=actions-runner-controller-0.9.0
 ENV RUNNER_ASSETS_DIR=/runner
 ENV RUNNER_ALLOW_RUNASROOT true
+# upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
+RUN  apt-get update && apt-get install -y xz-utils && \
+  wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
 
 USER root
 RUN apt-get update  &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
@@ -78,8 +81,6 @@ RUN wget -nv -O govc.gz https://github.com/vmware/govmomi/releases/download/v0.2
 RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
   && curl -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 \
   && chmod +x /usr/local/bin/dumb-init
-
-
 
 # Docker installation
 RUN  adduser --disabled-password --gecos "" --uid 1000 runner \
