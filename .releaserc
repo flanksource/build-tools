@@ -20,5 +20,7 @@ plugins:
       registries:
         - url: docker.io
           imageName: docker.io/flanksource/build-tools
-          additionalTags:
-            - latest
+          user: DOCKER_USER
+          password: DOCKER_PASSWORD
+      additionalTags:
+        - latest
