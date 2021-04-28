@@ -33,7 +33,7 @@ RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.16.2.linux-amd64.tar.gz && \
   tar -C /usr/local -xzf go.tar.gz  && \
   rm go.tar.gz
 
-ENV  PATH=$PATH:/usr/local/go/bin
+ENV PATH=$PATH:/usr/local/go/bin
 RUN wget -nv --no-check-certificate https://github.com/moshloop/systools/releases/download/3.6/systools.deb && dpkg -i systools.deb
 ARG SOPS_VERSION=3.5.0
 RUN install_deb https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops_${SOPS_VERSION}_amd64.deb
@@ -41,6 +41,8 @@ RUN install_bin https://github.com/CrunchyData/postgres-operator/releases/downlo
 RUN install_bin https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64
 RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8bd32d/gojsontoyaml
 RUN install_bin https://github.com/atkrad/wait4x/releases/download/v0.3.0/wait4x-linux-amd64
+
+
 RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1 mkdocs-same-dir mkdocs-autolinks-plugin mkdocs-material-extensions mkdocs-markdownextradata-plugin
 RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/linux-amd64-github-release.bz2 &&  \
   bzip2 -d linux-amd64-github-release.bz2 && \
@@ -57,6 +59,17 @@ RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64 && \
 RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl && \
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin
+
+RUN set -x; cd "$(mktemp -d)" && \
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" && \
+  tar zxvf krew.tar.gz && \
+  KREW=./krew-"${OS}_${ARCH}" && \
+  "$KREW" install krew
+
+ENV PATH=$PATH:${$HOME/.krew}/bin
+RUN kubectl krew install resource-snapshot neat kubesec-scan
 
 
 RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
