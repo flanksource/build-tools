@@ -42,4 +42,4 @@ docker:
 .PHONY: test
 test: docker
 	command -v dgoss 2>&1 > /dev/null || test/installgoss.sh
-	GOSS_FILES_PATH=test dgoss run --entrypoint=./test/fakeentry.sh $(NAME)
+	GOSS_FILES_PATH=test dgoss run $(NAME) sh -c "sleep 600" 

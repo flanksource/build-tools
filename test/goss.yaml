@@ -40,6 +40,12 @@ command:
       - \/usr/local/bin/gh
     stderr: []
     timeout: 10000
+  command -v kustomize:
+    exit-status: 0
+    stdout:
+      - \/usr/local/bin/kustomize
+    stderr: []
+    timeout: 10000
   command -v github-release:
     exit-status: 0
     stdout:
