@@ -54,7 +54,6 @@ RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.21.3/bin/linux/amd64/kube
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin
 
-
 RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && \ 
   chmod +x ./kustomize && \
   mv ./kustomize /usr/local/bin
