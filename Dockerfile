@@ -38,23 +38,19 @@ RUN wget -nv --no-check-certificate https://github.com/moshloop/systools/release
 ARG SOPS_VERSION=3.5.0
 RUN install_deb https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops_${SOPS_VERSION}_amd64.deb
 RUN install_bin https://github.com/CrunchyData/postgres-operator/releases/download/v4.1.0/expenv
-RUN install_bin https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64
+RUN install_bin https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_amd64
 RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8bd32d/gojsontoyaml
 RUN install_bin https://github.com/atkrad/wait4x/releases/download/v0.3.0/wait4x-linux-amd64
 RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1 mkdocs-same-dir mkdocs-autolinks-plugin mkdocs-material-extensions mkdocs-markdownextradata-plugin
-RUN wget -nv https://github.com/meterup/github-release/releases/download/v0.7.5/linux-amd64-github-release.bz2 &&  \
-  bzip2 -d linux-amd64-github-release.bz2 && \
-  chmod +x linux-amd64-github-release && \
-  mv linux-amd64-github-release /usr/local/bin/github-release
 RUN npm install -g npm@latest
 RUN npm install -g pnpm
 RUN pnpm install -g netlify-cli gh
 RUN go get github.com/mjibson/esc
 RUN mv /root/go/bin/esc /usr/local/bin/
-RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64 && \
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64 && \
   chmod +x ./kind && \
   mv ./kind /usr/local/bin/
-RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl && \
+RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.21.3/bin/linux/amd64/kubectl && \
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin
 
