@@ -16,9 +16,13 @@ FROM ubuntu:20.10
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.274.2
 ARG DOCKER_VERSION=19.03.12
+ARG KARINA_VERSION=v0.50.0
+ARG SOPS_VERSION=3.5.0
 ENV ACTIONS_RUNNER_VERSION=actions-runner-controller-0.9.0
 ENV RUNNER_ASSETS_DIR=/runner
 ENV RUNNER_ALLOW_RUNASROOT true
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
 USER root
 RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
@@ -35,7 +39,6 @@ RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.16.2.linux-amd64.tar.gz && \
 
 ENV  PATH=$PATH:/usr/local/go/bin
 RUN wget -nv --no-check-certificate https://github.com/moshloop/systools/releases/download/3.6/systools.deb && dpkg -i systools.deb
-ARG SOPS_VERSION=3.5.0
 RUN install_deb https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops_${SOPS_VERSION}_amd64.deb
 RUN install_bin https://github.com/CrunchyData/postgres-operator/releases/download/v4.1.0/expenv
 RUN install_bin https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_amd64
@@ -46,10 +49,13 @@ RUN npm install -g npm@latest
 RUN npm install -g pnpm
 RUN pnpm install -g netlify-cli gh
 RUN go get github.com/mjibson/esc
+RUN go get github.com/jstemmer/go-junit-report
 RUN mv /root/go/bin/esc /usr/local/bin/
+
 RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64 && \
   chmod +x ./kind && \
   mv ./kind /usr/local/bin/
+  
 RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.21.3/bin/linux/amd64/kubectl && \
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin
@@ -58,8 +64,10 @@ RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/
   chmod +x ./kustomize && \
   mv ./kustomize /usr/local/bin
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.36.0
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
+
+RUN wget -nv -O https://github.com/flanksource/karina/releases/download/$KARINA_VERSION/karina && \
+    chmod +x karina && \
+    mv karina /usr/local/bin
 
 RUN wget -nv -O govc.gz https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_linux_amd64.gz && \
   gunzip govc.gz && \
