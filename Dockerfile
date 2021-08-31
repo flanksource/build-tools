@@ -65,7 +65,7 @@ RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/
   mv ./kustomize /usr/local/bin
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.36.0
 
-RUN wget -nv -O https://github.com/flanksource/karina/releases/download/$KARINA_VERSION/karina && \
+RUN wget -nv https://github.com/flanksource/karina/releases/download/$KARINA_VERSION/karina && \
     chmod +x karina && \
     mv karina /usr/local/bin
 
