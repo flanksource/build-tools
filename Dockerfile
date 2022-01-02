@@ -33,7 +33,7 @@ RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agen
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
   apt-get clean
 
-RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.16.2.linux-amd64.tar.gz && \
+RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.17.5.linux-amd64.tar.gz && \
   tar -C /usr/local -xzf go.tar.gz  && \
   rm go.tar.gz
 
