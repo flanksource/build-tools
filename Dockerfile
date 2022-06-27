@@ -1,4 +1,4 @@
-FROM golang:1.16 as builder
+FROM golang:1.18 as builder
 # upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
 RUN  apt-get update && apt-get install -y xz-utils && \
   wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
@@ -33,7 +33,7 @@ RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agen
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
   apt-get clean
 
-RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.17.5.linux-amd64.tar.gz && \
+RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.18.3.linux-amd64.tar.gz && \
   tar -C /usr/local -xzf go.tar.gz  && \
   rm go.tar.gz
 
