@@ -34,9 +34,6 @@ RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agen
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
   apt-get clean
 
-RUN apt remove -y nodejs nodejs-doc && apt autoremove -y
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && apt-get install -y nodejs
-
 RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.18.3.linux-amd64.tar.gz && \
   tar -C /usr/local -xzf go.tar.gz  && \
   rm go.tar.gz
@@ -49,9 +46,6 @@ RUN install_bin https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linu
 RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8bd32d/gojsontoyaml
 RUN install_bin https://github.com/atkrad/wait4x/releases/download/v0.3.0/wait4x-linux-amd64
 RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1 mkdocs-same-dir mkdocs-autolinks-plugin mkdocs-material-extensions mkdocs-markdownextradata-plugin
-RUN npm install --location=global npm@latest
-RUN npm install --location=global pnpm
-RUN exec sh && pnpm setup && pnpm install --location=global netlify-cli gh
 RUN go install github.com/mjibson/esc@v0.2.0
 RUN go install github.com/jstemmer/go-junit-report@v1.0.0
 RUN mv /root/go/bin/esc /usr/local/bin/
