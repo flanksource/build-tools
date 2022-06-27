@@ -12,7 +12,7 @@ ARG VERSION
 RUN GOOS=linux GOARCH=amd64 make linux compress
 
 
-FROM ubuntu:20.10
+FROM ubuntu:22.04
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.274.2
 ARG DOCKER_VERSION=19.03.12
@@ -28,7 +28,7 @@ USER root
 RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
   add-apt-repository universe && DEBIAN_FRONTEND=noninteractive apt-get install -y  \
   genisoimage  wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils upx-ucl ca-certificates supervisor \
-  unzip zip software-properties-common sshuttle tzdata  openssh-client rsync shellcheck libunwind8 libyaml-dev libkrb5-3 zlib1g libicu67 liblttng-ust0 && \
+  unzip zip software-properties-common sshuttle tzdata  openssh-client rsync shellcheck libunwind8 libyaml-dev libkrb5-3 zlib1g libicu70 liblttng-ust1 && \
   rm -Rf /var/lib/apt/lists/*  && \
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
   apt-get clean
