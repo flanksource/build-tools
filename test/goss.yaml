@@ -34,22 +34,10 @@ command:
       - \/usr/bin/expenv
     stderr: []
     timeout: 10000
-  command -v gh:
-    exit-status: 0
-    stdout:
-      - \/usr/local/bin/gh
-    stderr: []
-    timeout: 10000
   command -v kustomize:
     exit-status: 0
     stdout:
       - \/usr/local/bin/kustomize
-    stderr: []
-    timeout: 10000
-  command -v github-release:
-    exit-status: 0
-    stdout:
-      - \/usr/local/bin/github-release
     stderr: []
     timeout: 10000
   command -v gojsontoyaml:
@@ -62,12 +50,6 @@ command:
     exit-status: 0
     stdout:
       - \/usr/local/bin/govc
-    stderr: []
-    timeout: 10000
-  command -v netlify:
-    exit-status: 0
-    stdout:
-      - \/usr/local/bin/netlify
     stderr: []
     timeout: 10000
   command -v upx:

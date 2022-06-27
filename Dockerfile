@@ -1,4 +1,4 @@
-FROM golang:1.16 as builder
+FROM golang:1.18 as builder
 # upx 3.95 has issues compressing darwin binaries - https://github.com/upx/upx/issues/301
 RUN  apt-get update && apt-get install -y xz-utils && \
   wget -nv -O upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz; tar xf upx.tar.xz; mv upx-3.96-amd64_linux/upx /usr/bin
@@ -12,7 +12,7 @@ ARG VERSION
 RUN GOOS=linux GOARCH=amd64 make linux compress
 
 
-FROM ubuntu:20.10
+FROM ubuntu:22.04
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.274.2
 ARG DOCKER_VERSION=19.03.12
@@ -28,12 +28,13 @@ USER root
 RUN apt-get update &&  apt-get install -y  software-properties-common gnupg-agent curl apt-transport-https && \
   add-apt-repository universe && DEBIAN_FRONTEND=noninteractive apt-get install -y  \
   genisoimage  wget jq git sudo npm python-setuptools python3-pip python3-dev build-essential xz-utils upx-ucl ca-certificates supervisor \
-  unzip zip software-properties-common sshuttle tzdata  openssh-client rsync shellcheck libunwind8 libyaml-dev libkrb5-3 zlib1g libicu67 liblttng-ust0 && \
+  unzip zip software-properties-common sshuttle tzdata  openssh-client rsync shellcheck libunwind8 libyaml-dev libkrb5-3 zlib1g \
+  libicu70 liblttng-ust1 && \
   rm -Rf /var/lib/apt/lists/*  && \
   rm -Rf /usr/share/doc && rm -Rf /usr/share/man  && \
   apt-get clean
 
-RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.17.5.linux-amd64.tar.gz && \
+RUN wget -nv -O go.tar.gz https://golang.org/dl/go1.18.3.linux-amd64.tar.gz && \
   tar -C /usr/local -xzf go.tar.gz  && \
   rm go.tar.gz
 
@@ -45,11 +46,8 @@ RUN install_bin https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linu
 RUN install_bin https://github.com/hongkailiu/gojsontoyaml/releases/download/e8bd32d/gojsontoyaml
 RUN install_bin https://github.com/atkrad/wait4x/releases/download/v0.3.0/wait4x-linux-amd64
 RUN pip3 install awscli mkdocs mkdocs-material markdown==3.2.1 mkdocs-same-dir mkdocs-autolinks-plugin mkdocs-material-extensions mkdocs-markdownextradata-plugin
-RUN npm install -g npm@latest
-RUN npm install -g pnpm
-RUN pnpm install -g netlify-cli gh
-RUN go get github.com/mjibson/esc
-RUN go get github.com/jstemmer/go-junit-report
+RUN go install github.com/mjibson/esc@v0.2.0
+RUN go install github.com/jstemmer/go-junit-report@v1.0.0
 RUN mv /root/go/bin/esc /usr/local/bin/
 
 RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64 && \
