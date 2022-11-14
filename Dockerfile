@@ -50,15 +50,15 @@ RUN go install github.com/mjibson/esc@v0.2.0
 RUN go install github.com/jstemmer/go-junit-report@v1.0.0
 RUN mv /root/go/bin/esc /usr/local/bin/
 
-RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64 && \
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64 && \
   chmod +x ./kind && \
   mv ./kind /usr/local/bin/
-  
+
 RUN wget -nv  -O kubectl  https://dl.k8s.io/release/v1.21.3/bin/linux/amd64/kubectl && \
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin
 
-RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && \ 
+RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && \
   chmod +x ./kustomize && \
   mv ./kustomize /usr/local/bin
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v1.36.0
